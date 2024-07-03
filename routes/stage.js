@@ -20,6 +20,7 @@ router.get('/:stageId', async(req, res) => {
 router.post('/', async (req, res) => {
     const schema = {
         nameStage: 'string',
+        bgImage: 'string'
     }
 
     const validate = v.validate(req.body, schema);
@@ -46,6 +47,7 @@ if (!stage) {
 
 const schema = {
     nameStage: 'string|optional',
+    bgImage: 'string|optional'
 }
 
 const validate = v.validate(req.body, schema);

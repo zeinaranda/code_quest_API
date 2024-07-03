@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-    const knowledgedone = sequelize.define('knowledgedone', {
+    const KnowledgeDone = sequelize.define('KnowledgeDone', {
         knowledgeDoneId: {
             type: DataTypes.INTEGER,
             primaryKey: true,
@@ -10,16 +10,19 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.BOOLEAN,
             allowNull: false 
           },
-          score: {
+          point: {
             type: DataTypes.INTEGER,
             allowNull: false 
           },
-          time: {
-            type: DataTypes.TIME,
+          koin: {
+            type: DataTypes.INTEGER,
             allowNull: false 
           },
           knowledgeId: {
-            type: DataTypes.TIME,
+            type: DataTypes.INTEGER,
+          },
+          userId: {
+            type: DataTypes.INTEGER,
           },
           createdAt: {
             type: DataTypes.DATE,
@@ -35,5 +38,5 @@ module.exports = (sequelize, DataTypes) => {
     });
 
 
-    return knowledgedone;
+    return KnowledgeDone;
 }

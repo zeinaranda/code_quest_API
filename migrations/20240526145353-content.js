@@ -3,20 +3,20 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.createTable('stage', {  
-      stageId: {
+    await queryInterface.createTable('content', {  
+      contentId: {
       type: Sequelize.INTEGER,
       primaryKey: true,
       autoIncrement: true,
       allowNull: false 
     },
-    nameStage: {
+    title: {
       type: Sequelize.STRING,
-      allowNull: false
+      allowNull: false 
     },
-    bgImage: {
+    content: {
       type: Sequelize.STRING,
-      allowNull: true
+      allowNull: false 
     },
     createdAt: {
       type: Sequelize.DATE,
@@ -26,14 +26,20 @@ module.exports = {
       type: Sequelize.DATE,
       allowNull: false
     },
-    
+    courseId: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'course',  // Nama tabel yang akan dijadikan referensi
+        key: 'courseId',       // Nama kolom pada tabel referensi
+    },
+  },
     
   });
 
-  },
+ },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.dropTable('stage');
-     
+    await queryInterface.dropTable('content');
   }
 };

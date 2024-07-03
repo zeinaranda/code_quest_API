@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const Validator = require('fastest-validator');
 const multer = require('multer');
-const { Avatar } = require('../models');
+const { Avatar, User, Ownedavatar, sequelize } = require('../models');
+// const { Avatar } = require('../models');
 
 // const storage = multer.diskStorage({
 //     destination: './upload/images',
@@ -16,13 +17,42 @@ const { Avatar } = require('../models');
 
 // router.use('/imageAvatar', express.static('upload/images'));
 
+router.get('/avatars/:userId', async (req, res) => {
+    const userId = req.params.userId;
+    const avatars = await Avatar.findAll({
+        include: [{
+            model: User,
+            where: { userId },
+            required: false,
+            attributes: []
+        }],
+        attributes: {
+            include: [
+                [sequelize.fn('COUNT', sequelize.col('User.userId')), 'owned']
+            ]
+        },
+        group: ['Avatar.avatarId']
+    });
+
+    const response = avatars.map(avatar => ({
+        id: avatar.avatarId,
+        name: avatar.namaAvatar,
+        image_url: avatar.imageAvatar,
+        owned: avatar.dataValues.owned > 0
+    }));
+
+    res.json(response);
+});
+
+
+
 router.post("/", async (req, res) => {
     // Define schema without imageAvatar
     const schema = {
         namaAvatar: { type: "string", empty: false },
         obtainMethod: { type: "string", empty: false },
         priceAvatar: { type: 'number', integer: true },
-        stageId: { type: "number", integer: true },
+        stageId: { type: "number", integer: true, nullable: true },
         imageAvatar: { type: "string", empty: false },
     };
 
@@ -67,6 +97,31 @@ router.get('/', async (req, res) => {
         return res.status(500).json({ error: 1, message: 'Terjadi kesalahan saat mengambil daftar avatar' });
     }
 });
+
+
+router.get('/avatars', async (req, res) => {
+    try {
+        const avatars = await Avatar.findAll();
+
+        // Membentuk array objek avatar sesuai format yang diharapkan
+        const formattedAvatars = avatars.map(avatar => ({
+            avatarId: avatar.avatarId,
+            namaAvatar: avatar.namaAvatar,
+            priceAvatar: avatar.priceAvatar,
+            imageAvatar: avatar.imageAvatar,
+            obtainMethod: avatar.obtainMethod,
+            createdAt: avatar.createdAt,
+            updatedAt: avatar.updatedAt,
+            stageId: avatar.stageId
+        }));
+
+        return res.status(200).json(formattedAvatars);
+    } catch (error) {
+        console.error('Error fetching avatars:', error);
+        return res.status(500).json({ error: 1, message: 'Terjadi kesalahan saat mengambil daftar avatar' });
+    }
+});
+
 
 router.get('/:avatarId', async(req, res) => {
     const avatarId = req.params.avatarId;

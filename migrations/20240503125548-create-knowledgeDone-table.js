@@ -14,12 +14,12 @@ module.exports = {
       type: Sequelize.BOOLEAN,
       allowNull: false 
     },
-    score: {
+    point: {
       type: Sequelize.INTEGER,
       allowNull: false 
     },
-    time: {
-      type: Sequelize.TIME,
+    koin: {
+      type: Sequelize.INTEGER,
       allowNull: false 
     },
     createdAt: {
@@ -36,6 +36,14 @@ module.exports = {
       references: {
         model: 'knowledge',  // Nama tabel yang akan dijadikan referensi
         key: 'knowledgeId',       // Nama kolom pada tabel referensi
+    },
+    },
+    userId: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'user',  // Nama tabel yang akan dijadikan referensi
+        key: 'userId',       // Nama kolom pada tabel referensi
     },
     },
 

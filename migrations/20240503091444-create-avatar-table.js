@@ -12,7 +12,7 @@ module.exports = {
     },
     namaAvatar: {
       type: Sequelize.STRING,
-      allowNull: false
+      allowNull: true
     },
     priceAvatar: {
       type: Sequelize.INTEGER,

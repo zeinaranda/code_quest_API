@@ -36,7 +36,7 @@ module.exports = {
     },
     knowledgeId: {
       type: Sequelize.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {
         model: 'knowledge',  // Nama tabel yang akan dijadikan referensi
         key: 'knowledgeId',       // Nama kolom pada tabel referensi
@@ -44,7 +44,7 @@ module.exports = {
     },
     bossId: {
       type: Sequelize.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {
         model: 'boss',  // Nama tabel yang akan dijadikan referensi
         key: 'bossId',       // Nama kolom pada tabel referensi

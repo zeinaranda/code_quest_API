@@ -14,10 +14,6 @@ module.exports = {
       type: Sequelize.STRING,
       allowNull: false 
     },
-    content: {
-      type: Sequelize.TEXT,
-      allowNull: false 
-    },
     createdAt: {
       type: Sequelize.DATE,
       allowNull: false
@@ -26,18 +22,18 @@ module.exports = {
       type: Sequelize.DATE,
       allowNull: false
     },
-    // stageId: {
-    //   type: Sequelize.INTEGER,
-    //   allowNull: false,
-    //   references: {
-    //     model: Stage,  // Nama tabel yang akan dijadikan referensi
-    //     key: 'stageId',       // Nama kolom pada tabel referensi
-    // },
-  // },
+    stageId: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'stage',  // Nama tabel yang akan dijadikan referensi
+        key: 'stageId',       // Nama kolom pada tabel referensi
+    },
+  },
     
   });
 
-  },
+ },
 
   async down (queryInterface, Sequelize) {
     await queryInterface.dropTable('course');

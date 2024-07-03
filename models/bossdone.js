@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-    const bossdone = sequelize.define('bossdone', {
+    const BossDone = sequelize.define('BossDone', {
         bossDoneId: {
             type: DataTypes.INTEGER,
             primaryKey: true,
@@ -10,16 +10,19 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.BOOLEAN,
             allowNull: false 
           },
-          score: {
+          point: {
             type: DataTypes.INTEGER,
             allowNull: false 
           },
-          time: {
-            type: DataTypes.TIME,
+          koin: {
+            type: DataTypes.INTEGER,
             allowNull: false 
           },
           bossId: {
-            type: DataTypes.TIME,
+            type: DataTypes.INTEGER,
+          },
+          userId: {
+            type: DataTypes.INTEGER,
           },
           createdAt: {
             type: DataTypes.DATE,
@@ -34,5 +37,5 @@ module.exports = (sequelize, DataTypes) => {
         tableName: 'bossdone'
     });
 
-    return bossdone;
+    return BossDone;
 }

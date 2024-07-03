@@ -14,7 +14,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({
     storage: storage,
-    limits: { fileSize: 10000000000000 }
+    limits: { fileSize: 10 * 1024 * 1024 } // Example reasonable file size limit
 });
 
 var indexRouter = require('./routes/index');
@@ -22,6 +22,16 @@ var usersRouter = require('./routes/users');
 var userRouter = require('./routes/user');
 var avatarRouter = require('./routes/avatar');
 var stageRouter = require('./routes/stage');
+var questionRouter = require('./routes/question');
+var bossdoneRouter = require('./routes/bossdone');
+var ownedRouter = require('./routes/ownedavatar');
+var storyRouter = require('./routes/storytelling');
+var knowledgedoneRouter = require('./routes/knowledgedone');
+var userStageRouter = require('./routes/userstage');
+var progressRouter = require('./routes/progress');
+
+
+
 
 var app = express();
 
@@ -55,6 +65,18 @@ app.use('/users', usersRouter);
 app.use('/user', userRouter);
 app.use('/avatar', avatarRouter);
 app.use('/stage', stageRouter);
+app.use('/question', questionRouter);
+app.use('/bossdone', bossdoneRouter);
+app.use('/owned', ownedRouter);
+app.use('/storytelling', storyRouter);
+app.use('/knowledgedone', knowledgedoneRouter);
+app.use('/userstage', userStageRouter);
+app.use('/progress', progressRouter);
+
+
+
+
+
 app.use(errHandler);
 
 module.exports = app;

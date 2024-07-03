@@ -24,7 +24,7 @@ module.exports = {
     },
     stageId: {
       type: Sequelize.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {
         model: 'stage',  // Nama tabel yang akan dijadikan referensi
         key: 'stageId',       // Nama kolom pada tabel referensi
@@ -32,12 +32,16 @@ module.exports = {
     },
     avatarId: {
       type: Sequelize.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {
         model: 'avatar',  // Nama tabel yang akan dijadikan referensi
         key: 'avatarId',       // Nama kolom pada tabel referensi
     },
   },
+  codeScene: {
+    type: Sequelize.STRING,
+    allowNull: false,
+}
     
   });
 

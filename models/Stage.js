@@ -10,6 +10,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
           },
+          bgImage: {
+            type: DataTypes.STRING,
+            allowNull: true
+          },
           createdAt: {
             type: DataTypes.DATE,
             allowNull: false
@@ -21,6 +25,10 @@ module.exports = (sequelize, DataTypes) => {
     }, {
         tableName: 'stage'
     });
+
+    Stage.associate = function(models) {
+      Stage.belongsToMany(models.User, { through: models.UserStage, foreignKey: 'stageId' });
+  };
 
     return Stage;
 }

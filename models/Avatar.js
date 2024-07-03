@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
           },
           namaAvatar: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: true
           },
           priceAvatar: {
             type: DataTypes.INTEGER,
@@ -38,5 +38,6 @@ module.exports = (sequelize, DataTypes) => {
         tableName: 'avatar'
     });
 
+    
     return Avatar;
 }

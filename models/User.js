@@ -36,11 +36,23 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.DATE,
             allowNull: false
           },
+          ownedAvatars: {
+            type: DataTypes.JSON,  // Gunakan tipe data JSON
+            defaultValue: [],
+          },
+          firstLogin: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: true,
+          },
 
     }, {
 
         tableName: 'user'
     });
 
+    User.associate = function(models) {
+      User.belongsToMany(models.Stage, { through: models.UserStage, foreignKey: 'userId' });
+  };
+ 
     return User;
 }

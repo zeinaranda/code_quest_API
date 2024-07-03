@@ -4,7 +4,7 @@
 module.exports = {
   async up (queryInterface, Sequelize) {
     await queryInterface.createTable('bossDone', {  
-      knowledgeDoneId: {
+      bossDoneId: {
       type: Sequelize.INTEGER,
       primaryKey: true,
       autoIncrement: true,
@@ -14,12 +14,12 @@ module.exports = {
       type: Sequelize.BOOLEAN,
       allowNull: false 
     },
-    score: {
+    point: {
       type: Sequelize.INTEGER,
       allowNull: false 
     },
-    time: {
-      type: Sequelize.TIME,
+    koin: {
+      type: Sequelize.INTEGER,
       allowNull: false 
     },
     createdAt: {
@@ -37,6 +37,14 @@ module.exports = {
         model: 'boss',  // Nama tabel yang akan dijadikan referensi
         key: 'bossId',       // Nama kolom pada tabel referensi
     },
+  },
+  userId: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'user',  // Nama tabel yang akan dijadikan referensi
+      key: 'userId',       // Nama kolom pada tabel referensi
+  },
   },
 
 

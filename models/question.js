@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-    const question = sequelize.define('question', {
+    const Question = sequelize.define('Question', {
         questionId: {
             type: DataTypes.INTEGER,
             primaryKey: true,
@@ -59,5 +59,5 @@ module.exports = (sequelize, DataTypes) => {
     //     targetKey: 'knowledgeId', // Nama kolom pada tabel "order" yang dijadikan referensi
     //   });
 
-    return question;
+    return Question;
 }

@@ -1,10 +1,16 @@
 module.exports = (sequelize, DataTypes) => {
-    const Knowledge = sequelize.define('knowledge', {
-        knowledgeId: {
+    const Ownedavatar = sequelize.define('Ownedavatar', {
+        ownedId: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true,
             allowNull: false 
+          },
+          userId: {
+            type: DataTypes.INTEGER,
+          },
+          avatarId: {
+            type: DataTypes.INTEGER,
           },
           createdAt: {
             type: DataTypes.DATE,
@@ -14,9 +20,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.DATE,
             allowNull: false
           },
+         
     }, {
-        tableName: 'knowledge'
+        tableName: 'ownedavatar'
     });
 
-    return Knowledge;
+    return Ownedavatar;
 }
