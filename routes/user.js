@@ -68,7 +68,8 @@ router.post('/register', async (req, res) => {
   
       if (user.firstLogin) {
         console.log(`User's first login: ${nim}, current coins: ${user.koin}`);
-        user.koin += 1600;
+        user.koin += 1000;
+        user.point += 100;
         showStorytelling = true;
   
         // Fetch storytelling content
@@ -215,11 +216,16 @@ router.put('/:userId/profile/image', async (req, res) => {
   }
 
   try {
-    // Implement your logic to update user profile image here
-    console.log(`Updating profile image for user ${userId} with image URI: ${imageUri}`);
+    // Find the user by userId
+    const user = await User.findByPk(userId);
     
-    // Simpan gambar profil di sini sesuai kebutuhan aplikasi Anda
-    
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Update the profileAvatar field
+    await user.update({ profileAvatar: imageUri });
+
     res.status(200).json({ message: 'Profile image updated successfully' });
   } catch (error) {
     console.error('Error updating profile image:', error);
