@@ -29,6 +29,10 @@ var storyRouter = require('./routes/storytelling');
 var knowledgedoneRouter = require('./routes/knowledgedone');
 var userStageRouter = require('./routes/userstage');
 var progressRouter = require('./routes/progress');
+var friendRouter = require('./routes/friend');
+var forumRouter = require('./routes/forum');
+
+
 
 
 
@@ -72,6 +76,9 @@ app.use('/storytelling', storyRouter);
 app.use('/knowledgedone', knowledgedoneRouter);
 app.use('/userstage', userStageRouter);
 app.use('/progress', progressRouter);
+app.use('/friend', friendRouter);
+app.use('/forum', forumRouter);
+
 
 
 

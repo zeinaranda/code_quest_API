@@ -51,13 +51,13 @@ router.get('/user/:userId/stage/:stageId/completion', async (req, res) => {
     try {
         const { userId, stageId } = req.params;
 
-        // Cari entri di UserStage dengan skor >= 640
+        // Cari entri di UserStage dengan skor >= 1120
         const userStage = await UserStage.findOne({
             where: {
                 userId: userId,
                 stageId: stageId,
                 progressPoint: {
-                    [Op.gte]: 640
+                    [Op.gte]: 1120
                 }
             }
         });

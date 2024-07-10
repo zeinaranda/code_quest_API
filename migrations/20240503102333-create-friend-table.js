@@ -21,6 +21,17 @@ module.exports = {
         key: 'userId',       // Nama kolom pada tabel referensi
     },
   },
+  friendUserId: {
+    type: Sequelize.INTEGER,
+    references: {
+    model : {
+      tableName: "user"
+    },
+    
+     // Nama tabel yang akan dijadikan referensi
+    key: 'userId',       // Nama kolom pada tabel referensi
+},
+},
   createdAt: {
     type: Sequelize.DATE,
     allowNull: false

@@ -39,4 +39,33 @@ router.get('/:userId', async(req, res) => {
     return res.json(bossdone || {});
 });
 
+router.get('/check/:userId', async (req, res) => {
+    const { userId } = req.params;
+    const bossIds = [1, 2, 3, 4, 5, 6, 7];
+
+    try {
+        const bossDone = await BossDone.findAll({
+            where: {
+                userId: userId,
+                bossId: bossIds,
+            }
+        });
+
+        const response = {
+            boss1Completed: bossDone.some(kd => kd.bossId === 1),
+            boss2Completed: bossDone.some(kd => kd.bossId === 2),
+            boss3Completed: bossDone.some(kd => kd.bossId === 3),
+            boss4Completed: bossDone.some(kd => kd.bossId === 4),
+            boss5Completed: bossDone.some(kd => kd.bossId === 5),
+            boss6Completed: bossDone.some(kd => kd.bossId === 6),
+            boss7Completed: bossDone.some(kd => kd.bossId === 7),
+        };
+
+        res.status(200).json(response);
+    } catch (error) {
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+
 module.exports = router;

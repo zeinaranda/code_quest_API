@@ -68,7 +68,7 @@ router.post('/register', async (req, res) => {
   
       if (user.firstLogin) {
         console.log(`User's first login: ${nim}, current coins: ${user.koin}`);
-        user.koin += 1000;
+        user.koin += 1260;
         user.point += 100;
         showStorytelling = true;
   
