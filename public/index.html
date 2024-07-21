@@ -4,25 +4,76 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Progress</title>
+    <!-- Materialize CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
     <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        body {
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
         }
-        th, td {
-            border: 1px solid black;
-            padding: 8px;
+        h1 {
+            text-align: center;
+            color: #26a69a;
+            margin-bottom: 20px;
+            font-family: 'Roboto', sans-serif;
+        }
+        .dropdown-content {
+            max-height: 300px;
+            overflow-y: auto;
+            width: 300px; /* Set the desired width for the dropdown menu */
+        }
+        .dropdown-trigger {
+            width: 100%; /* Ensure the trigger button takes full width */
+        }
+        .user-table {
+            margin-bottom: 30px;
+        }
+        .user-ranking {
+            padding-bottom: 20px;
+            border-bottom: 2px solid #26a69a;
+        }
+        .user-caption {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #00796b;
+            padding-top: 20px; /* Add padding at the top of the user name */
+            margin-bottom: 20px;
+            text-align: center;
+            font-family: 'Roboto', sans-serif;
+        }
+        .user-caption span {
+            display: block;
+            font-size: 1.2em;
+            color: #004d40;
+        }
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 12px;
             text-align: left;
         }
-        th {
-            background-color: #f2f2f2;
+        table th {
+            background-color: #004d40;
+            color: #fff;
+        }
+        table td {
+            background-color: #e0f2f1;
         }
     </style>
 </head>
 <body>
     <h1>Student Progress</h1>
-    <div id="userProgress"></div>
+    
+    <div class="container">
+        <a class='dropdown-trigger btn' href='#' data-target='dropdown1'>Pilih Peringkat</a>
+        <ul id='dropdown1' class='dropdown-content'></ul>
+    </div>
+
+    <div id="userProgress" class="container"></div>
 
     <script src="script.js"></script>
+    <!-- Materialize JS and dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
 </html>
