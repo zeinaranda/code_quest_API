@@ -30,13 +30,14 @@ const { UserStage, User, Stage } = require('../models');
 router.post('/user/:userId/stage/:stageId/progress', async (req, res) => {
     try {
         const { userId, stageId } = req.params;
-        const { progressPoint } = req.body;
+        const { progressPoint, test } = req.body;
 
         // Buat entri baru di UserStage
         const userStage = await UserStage.create({
             userId: userId,
             stageId: stageId,
-            progressPoint: progressPoint
+            progressPoint: progressPoint,
+            test: test
         });
 
         res.status(200).json(userStage);
@@ -58,7 +59,7 @@ router.get('/user/:userId/stage/:stageId/completion', async (req, res) => {
                 stageId: stageId,
                 progressPoint: {
                     [Op.gte]: 1120
-                }
+                },
             }
         });
 
@@ -76,6 +77,7 @@ router.get('/progress', async (req, res) => {
             attributes: [
                 'userId',
                 'stageId',
+                'test',
                 'progressPoint',
                 'createdAt',
                 'updatedAt'
