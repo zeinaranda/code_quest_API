@@ -28,6 +28,11 @@ module.exports = (sequelize, DataTypes) => {
 
     Stage.associate = function(models) {
       Stage.belongsToMany(models.User, { through: models.UserStage, foreignKey: 'stageId' });
+
+      Stage.associate = function(models) {
+        Stage.hasMany(models.UserStage, { foreignKey: 'stageId' });  // Add this line
+    };
+
   };
 
     return Stage;

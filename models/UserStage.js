@@ -37,8 +37,12 @@ module.exports = (sequelize, DataTypes) => {
 
     UserStage.associate = function(models) {
       UserStage.belongsTo(models.User, { foreignKey: 'userId' });
+        UserStage.belongsTo(models.Stage, { foreignKey: 'stageId' });  // Ensure this line is present
+    };
 
-  };
+
+
+
 
 
  

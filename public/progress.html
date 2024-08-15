@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Pengguna</title>
+</head>
+<body>
+    <h1>Data Pengguna</h1>
+    <table id="dataTable">
+        <thead>
+            <tr>
+                <th>User ID</th>
+                <th>Progress Points (Highest)</th>
+                <th>Test Points (Highest)</th>
+                <th>Ujian Points (Highest)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data akan diisi oleh JavaScript -->
+        </tbody>
+    </table>
+
+    <script>
+        // Mendapatkan userId dari URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get('userId');
+
+        if (userId) {
+            // Fetch data berdasarkan userId
+            fetch(`/userstage/progress/${userId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.getElementById('dataTable').querySelector('tbody');
+                    if (data) {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${data.userId}</td>
+                            <td>${data.progressPoints}</td>
+                            <td>${data.testPoints}</td>
+                            <td>${data.ujianPoints}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    } else {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `<td colspan="4">No data found</td>`;
+                        tableBody.appendChild(row);
+                    }
+                })
+                .catch(error => console.error('Error fetching progress data:', error));
+        } else {
+            const tableBody = document.getElementById('dataTable').querySelector('tbody');
+            const row = document.createElement('tr');
+            row.innerHTML = `<td colspan="4">No userId provided</td>`;
+            tableBody.appendChild(row);
+        }
+    </script>
+</body>
+</html>

@@ -3,77 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Progress</title>
-    <!-- Materialize CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <title>Data Pengguna</title>
     <style>
-        body {
-            background-color: #f4f4f9;
-            color: #333;
-            margin: 0;
-            padding: 20px;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
         }
-        h1 {
-            text-align: center;
-            color: #26a69a;
-            margin-bottom: 20px;
-            font-family: 'Roboto', sans-serif;
+        table, th, td {
+            border: 1px solid black;
         }
-        .dropdown-content {
-            max-height: 300px;
-            overflow-y: auto;
-            width: 300px; /* Set the desired width for the dropdown menu */
-        }
-        .dropdown-trigger {
-            width: 100%; /* Ensure the trigger button takes full width */
-        }
-        .user-table {
-            margin-bottom: 30px;
-        }
-        .user-ranking {
-            padding-bottom: 20px;
-            border-bottom: 2px solid #26a69a;
-        }
-        .user-caption {
-            font-size: 1.5em;
-            font-weight: 700;
-            color: #00796b;
-            padding-top: 20px; /* Add padding at the top of the user name */
-            margin-bottom: 20px;
-            text-align: center;
-            font-family: 'Roboto', sans-serif;
-        }
-        .user-caption span {
-            display: block;
-            font-size: 1.2em;
-            color: #004d40;
-        }
-        table th, table td {
-            border: 1px solid #ddd;
-            padding: 12px;
+        th, td {
+            padding: 10px;
             text-align: left;
         }
-        table th {
-            background-color: #004d40;
-            color: #fff;
+        .highlight {
+            font-weight: bold;
         }
-        table td {
-            background-color: #e0f2f1;
+        .subCPMK {
+            border-top: 2px solid black;
         }
     </style>
 </head>
 <body>
-    <h1>Student Progress</h1>
-    
-    <div class="container">
-        <a class='dropdown-trigger btn' href='#' data-target='dropdown1'>Pilih Peringkat</a>
-        <ul id='dropdown1' class='dropdown-content'></ul>
-    </div>
+    <h1>Data Pengguna</h1>
+    <label for="userSelect">Pilih Pengguna:</label>
+    <select id="userSelect">
+        <option value="">--Pilih Pengguna--</option>
+        <!-- Opsi pengguna akan diisi oleh JavaScript -->
+    </select>
+    <table id="dataTable">
+        <thead>
+            <tr>
+                <th>Materi Pembelajaran</th>
+                <th>Sub CPMK</th>
+                <th>Knowledge Check</th>
+                <th>Boss Fight</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data akan diisi oleh JavaScript -->
+        </tbody>
+    </table>
 
-    <div id="userProgress" class="container"></div>
+    <script>
+        // Ambil data pengguna untuk dropdown
+        fetch('/userstage/users')
+            .then(response => response.json())
+            .then(users => {
+                console.log('Users:', users); // Debugging untuk melihat data pengguna
+                const userSelect = document.getElementById('userSelect');
+                users.forEach(user => {
+                    const option = document.createElement('option');
+                    option.value = user.userId;
+                    option.textContent = user.nama;
+                    userSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error fetching users:', error));
 
-    <script src="script.js"></script>
-    <!-- Materialize JS and dependencies -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+        // Update tabel berdasarkan pengguna yang dipilih
+        document.getElementById('userSelect').addEventListener('change', function() {
+            const userId = this.value;
+
+            if (userId) {
+                fetch(`/userstage/progress/${userId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Data:', data); // Debugging untuk melihat data tabel
+                        const tableBody = document.getElementById('dataTable').querySelector('tbody');
+                        tableBody.innerHTML = ''; // Clear existing rows
+
+                        if (data.length > 0) {
+                            let currentMateriPembelajaran = '';
+                            data.forEach(row => {
+                                const tr = document.createElement('tr');
+
+                                // Check if this row is a new section
+                                if (row.subCPMK) {
+                                    tr.classList.add('subCPMK');
+                                }
+
+                                // Cek jika materi pembelajaran berbeda dari baris sebelumnya
+                                const materiPembelajaranCell = row.materiPembelajaran !== currentMateriPembelajaran 
+                                    ? row.materiPembelajaran 
+                                    : '';
+                                currentMateriPembelajaran = row.materiPembelajaran;
+
+                                tr.innerHTML = `
+                                    <td>${materiPembelajaranCell}</td>
+                                    <td>${row.subCPMK || ''}</td>
+                                    <td>${row.tes !== undefined ? row.tes : ''}</td>
+                                    <td>${row.ujian !== undefined ? row.ujian : ''}</td>
+                                `;
+                                tableBody.appendChild(tr);
+                            });
+                        } else {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `<td colspan="4">No data found</td>`;
+                            tableBody.appendChild(row);
+                        }
+                    })
+                    .catch(error => console.error('Error fetching progress data:', error));
+            } else {
+                const tableBody = document.getElementById('dataTable').querySelector('tbody');
+                tableBody.innerHTML = ''; // Clear table if no user is selected
+            }
+        });
+    </script>
 </body>
 </html>
