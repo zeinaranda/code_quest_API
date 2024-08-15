@@ -117,6 +117,7 @@ router.post('/register', async (req, res) => {
   });
 
 
+  // update first login
   router.put('/updateFirstLoginStatus', async (req, res) => {
     const { userId } = req.body;
 
@@ -135,13 +136,13 @@ router.post('/register', async (req, res) => {
     }
 });
 
-
+// get all users
 router.get('/', async(req, res) => {
     const user = await User.findAll();
     return res.json(user);
 });
 
-
+// top users
 router.get('/top-users', async (req, res) => {
   try {
       const topUsers = await User.findAll({
@@ -167,7 +168,7 @@ router.get('/top-users', async (req, res) => {
   }
 });
 
-
+// get user by user id
 router.get('/:userId', async(req, res) => {
   const userId = req.params.userId;
   try {
@@ -176,13 +177,13 @@ router.get('/:userId', async(req, res) => {
           return res.status(404).json({ message: 'User not found' });
       }
 
-      // Konversi string 'ownedAvatars' menjadi array jika perlu
+      // Konversi string 'ownedAvatars' menjadi array
       let ownedAvatars = user.ownedAvatars || [];
       if (typeof ownedAvatars === 'string') {
           ownedAvatars = JSON.parse(ownedAvatars);
       }
 
-      // Ubah format tanggal agar sesuai dengan yang diminta
+      // Ubah format tanggal
       const formattedCreatedAt = user.createdAt.toISOString();
       const formattedUpdatedAt = user.updatedAt.toISOString();
 
@@ -207,6 +208,7 @@ router.get('/:userId', async(req, res) => {
   }
 });
 
+// edit profile image user
 router.put('/:userId/profile/image', async (req, res) => {
   const userId = parseInt(req.params.userId);
   const { imageUri } = req.body;
@@ -232,6 +234,7 @@ router.put('/:userId/profile/image', async (req, res) => {
     res.status(500).json({ error: 'Failed to update profile image' });
   }
 });
+
 
 router.post('/', async (req, res) => {
     const schema = {
@@ -293,11 +296,7 @@ router.post('/addOwnedAvatar/:userId', async (req, res) => {
 
 
 
-
-
-
-
-
+// put user
 
 router.put('/:userId', async (req, res) => {
     const userId = req.params.userId;
@@ -376,6 +375,7 @@ router.put('/:userId', async (req, res) => {
 // res.json(user);
 // });
 
+// delete user
 router.delete('/:userId', async(req, res) => {
     const userId = req.params.userId;
     const user = await User.findByPk(userId);

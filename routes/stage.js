@@ -6,17 +6,20 @@ const {Stage} = require('../models');
 
 const v = new Validator();
 
+//get data stage
 router.get('/', async(req, res) => {
     const stage = await Stage.findAll();
     return res.json(stage);
 });
 
+//get data by id
 router.get('/:stageId', async(req, res) => {
     const stageId = req.params.stageId;
     const stage = await Stage.findByPk(stageId);
     return res.json(stage || {});
 });
 
+//post stage
 router.post('/', async (req, res) => {
     const schema = {
         nameStage: 'string',
@@ -36,6 +39,7 @@ router.post('/', async (req, res) => {
     res.json(stage);
 });
 
+// put stage
 router.put('/:stageId', async (req, res) => {
 const stageId = req.params.stageId;
 
@@ -61,6 +65,7 @@ stage = await Stage.update(req.body);
 res.json(stage);
 });
 
+//delete stage
 router.delete('/:stageId', async(req, res) => {
     const stageId = req.params.stageId;
     const stage = await Stage.findByPk(stageId);

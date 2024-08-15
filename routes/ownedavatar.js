@@ -6,6 +6,7 @@ const {Ownedavatar} = require('../models');
 
 const v = new Validator();
 
+// get data
 router.get('/', async(req, res) => {
     const ownedavatar = await Ownedavatar.findAll();
     return res.json(ownedavatar);

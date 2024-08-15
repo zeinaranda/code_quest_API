@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const groupedData = data.reduce((acc, curr) => {
                 if (!acc[curr.userId]) {
                     acc[curr.userId] = {
-                        userName: curr.User.nama, // Assuming 'nama' is the user's name field
+                        userName: curr.User.nama,
                         progress: [],
                         totalPoints: 0,
                     };
@@ -48,34 +48,51 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const userCaption = document.createElement('div');
                 userCaption.className = 'user-caption';
-                userCaption.innerHTML = `Peringkat ${sortedUsers.indexOf(user) + 1} <span>${user.userName}</span>`;
+                userCaption.innerHTML = `Peringkat ${sortedUsers.indexOf(user) + 1} - ${user.totalPoints} Points <span>${user.userName}</span> `;
 
-                const userTable = document.createElement('table');
-                userTable.className = 'highlight user-table';
-                userTable.innerHTML = `
-                    <thead>
-                        <tr>
-                            <th>Stage</th>
-                            <th>Point</th>
-                            <th>Tanggal Pengerjaan</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                `;
-
-                user.progress.forEach(progress => {
-                    userTable.innerHTML += `
-                        <tr>
-                            <td>${progress.stageId}</td>
-                            <td>${progress.progressPoint}</td>
-                            <td>${new Date(progress.createdAt).toLocaleDateString()}</td>
-                        </tr>
-                    `;
-                });
-
-                userTable.innerHTML += `</tbody>`;
                 userRankingDiv.appendChild(userCaption);
-                userRankingDiv.appendChild(userTable);
+
+                const stages = user.progress.reduce((acc, curr) => {
+                    if (!acc[curr.stageId]) {
+                        acc[curr.stageId] = [];
+                    }
+                    acc[curr.stageId].push(curr);
+                    return acc;
+                }, {});
+
+                for (const [stageId, progresses] of Object.entries(stages)) {
+                    const stageDiv = document.createElement('div');
+                    stageDiv.className = 'stage-div';
+                    stageDiv.innerHTML = `<h5>Stage ${stageId}</h5>`;
+
+                    const userTable = document.createElement('table');
+                    userTable.className = 'highlight user-table';
+                    userTable.innerHTML = `
+                        <thead>
+                            <tr>
+                                <th>Test</th>
+                                <th>Point</th>
+                                <th>Tanggal Pengerjaan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                    `;
+
+                    progresses.forEach(progress => {
+                        userTable.innerHTML += `
+                            <tr>
+                                <td>${progress.test}</td>
+                                <td>${progress.progressPoint}</td>
+                                <td>${new Date(progress.createdAt).toLocaleDateString()}</td>
+                            </tr>
+                        `;
+                    });
+
+                    userTable.innerHTML += `</tbody>`;
+                    stageDiv.appendChild(userTable);
+                    userRankingDiv.appendChild(stageDiv);
+                }
+
                 userProgressDiv.appendChild(userRankingDiv);
             }
         })

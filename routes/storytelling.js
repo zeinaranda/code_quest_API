@@ -6,6 +6,7 @@ const { Storytelling, Avatar, Stage } = require('../models');
 const Validator = require('fastest-validator');
 const v = new Validator();
 
+// get all storytelling
 router.get('/', async (req, res) => {
   try {
     const storytelling = await Storytelling.findAll();
@@ -16,6 +17,7 @@ router.get('/', async (req, res) => {
   }
 });
 
+// get story by id
 router.get('/:storyId', async (req, res) => {
   const storyId = req.params.storyId;
   try {
@@ -27,6 +29,7 @@ router.get('/:storyId', async (req, res) => {
   }
 });
 
+// get story by codeScene
 router.get('/code/:codeScene', async (req, res) => {
   const codeScene = req.params.codeScene;
   try {
@@ -74,7 +77,7 @@ router.get('/code/:codeScene', async (req, res) => {
 
   
   
-
+// post story
 router.post('/', async (req, res) => {
   const schema = {
     text: 'string',
@@ -98,6 +101,7 @@ router.post('/', async (req, res) => {
   }
 });
 
+// put story
 router.put('/:storyId', async (req, res) => {
   const storyId = req.params.storyId;
 
@@ -129,6 +133,7 @@ router.put('/:storyId', async (req, res) => {
   }
 });
 
+// delete story
 router.delete('/:storyId', async (req, res) => {
   const storyId = req.params.storyId;
 

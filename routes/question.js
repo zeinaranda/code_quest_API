@@ -17,6 +17,7 @@ const schema = {
     bossId: { type: 'number', optional: true, nullable: true },
 };
 
+//post soal
 router.post('/', async (req, res) => {
     // Validate request body
     const validationResult = v.validate(req.body, schema);
@@ -35,12 +36,14 @@ router.post('/', async (req, res) => {
     }
 });
 
+//get soal by boss id
 router.get('/:bossId', async(req, res) => {
     const bossId = req.params.bossId;
     const question = await Question.findAll({ where: { bossId: bossId } });
     return res.json(question || {});
 });
 
+// get soal by knowledge id
 router.get('/knowledge/:knowledgeId', async(req, res) => {
     const knowledgeId = req.params.knowledgeId;
     const question = await Question.findAll({ where: { knowledgeId: knowledgeId } });

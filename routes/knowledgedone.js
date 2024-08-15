@@ -15,6 +15,7 @@ const schema = {
 
 };
 
+// post knowledge done
 router.post('/', async (req, res) => {
     // Validate request body
     const validationResult = v.validate(req.body, schema);
@@ -33,12 +34,14 @@ router.post('/', async (req, res) => {
     }
 });
 
+// get data by user id
 router.get('/:userId', async(req, res) => {
     const userId = req.params.userId;
     const knowledgedone = await KnowledgeDone.findAll({ where: { userIdId: userId } });
     return res.json(knowledgedone || {});
 });
 
+// untuk check knowledge completion
 router.get('/check/:userId', async (req, res) => {
     const { userId } = req.params;
     const knowledgeIds = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];

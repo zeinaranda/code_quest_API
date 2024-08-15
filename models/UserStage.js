@@ -19,6 +19,9 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: true,
             defaultValue: 0
           },
+          test: {
+            type: DataTypes.STRING,
+          },
           createdAt: {
             type: DataTypes.DATE,
             allowNull: false,
