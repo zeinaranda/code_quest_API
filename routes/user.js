@@ -142,15 +142,66 @@ router.get('/', async(req, res) => {
     return res.json(user);
 });
 
+
+router.post('/update-user-points', async (req, res) => {
+  try {
+      const { userId, newPoints } = req.body;
+
+      const user = await User.findByPk(userId);
+      if (!user) {
+          return res.status(404).json({ error: 'User not found' });
+      }
+
+      await user.updatePoints(newPoints);
+
+      res.json({ message: 'User points updated successfully', user });
+  } catch (error) {
+      res.status(500).json({ error: 'Something went wrong' });
+  }
+});
+
+
 // top users
 router.get('/top-users', async (req, res) => {
   try {
+      // Fetch top users based on points
       const topUsers = await User.findAll({
           order: [['point', 'DESC']],
-          limit: 10 // Mengambil 10 pengguna teratas
+          limit: 10 // Get top 10 users
       });
 
-      // Pastikan ownedAvatars selalu berupa array
+      // Update user ranks and arrow indicators
+      for (const [index, user] of topUsers.entries()) {
+          const currentRank = index + 1;
+
+          // Check if rank has changed
+          if (currentRank !== user.previousRank) {
+              let rankArrow = user.rankArrow; // Keep existing arrow unless changed
+              let rankChange = user.rankChange; // Keep existing rank change unless changed
+
+              // Calculate rank difference
+              const rankDifference = user.previousRank - currentRank;
+
+              // Update arrowRank and rankChange based on rank difference
+              if (rankDifference > 0) { // User's rank improved
+                  rankArrow = 'up';
+                  rankChange = `+${rankDifference}`;
+              } else if (rankDifference < 0) { // User's rank declined
+                  rankArrow = 'down';
+                  rankChange = `${rankDifference}`;
+              }
+
+              // Update current user rank, previous rank, arrow, and rank change
+              await user.update({
+                  rank: currentRank,
+                  previousRank: currentRank,
+                  rankArrow,
+                  rankChange
+              });
+          }
+      }
+
+      // Ensure ownedAvatars is always an array
       const usersWithArray = topUsers.map(user => {
           let ownedAvatars = user.ownedAvatars || [];
           if (typeof ownedAvatars === 'string') {
@@ -167,6 +218,10 @@ router.get('/top-users', async (req, res) => {
       res.status(500).json({ error: 'Something went wrong' });
   }
 });
+
+
+
+
 
 // get user by user id
 router.get('/:userId', async(req, res) => {

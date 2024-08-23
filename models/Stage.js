@@ -14,6 +14,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: true
           },
+          titleStage: {
+            type: DataTypes.STRING,
+            allowNull: true
+          },
           createdAt: {
             type: DataTypes.DATE,
             allowNull: false

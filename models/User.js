@@ -44,6 +44,25 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.BOOLEAN,
             defaultValue: true,
           },
+          kategori: {
+            type: DataTypes.STRING
+          },
+          rank: { // Tambahkan kolom untuk menyimpan poin sebelumnya
+            type: DataTypes.INTEGER,
+            defaultValue: 0
+          },
+          previousRank: { // Track previous rank
+            type: DataTypes.INTEGER,
+            defaultValue: 0
+        },
+          rankArrow: { // Tambahkan kolom untuk status panah
+            type: DataTypes.STRING,
+            defaultValue: 'none'
+          },
+          rankChange: { // Menyimpan perubahan peringkat sebagai string seperti "+3" atau "-2"
+            type: DataTypes.STRING,
+            defaultValue: ''
+        }
 
     }, {
 
@@ -53,6 +72,7 @@ module.exports = (sequelize, DataTypes) => {
     User.associate = function(models) {
       User.belongsToMany(models.Stage, { through: models.UserStage, foreignKey: 'userId' });
   };
+ 
  
     return User;
 }

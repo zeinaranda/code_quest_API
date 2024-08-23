@@ -3,112 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Pengguna</title>
+    <title>Login</title>
     <style>
-        table {
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .login-container {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            padding-right: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            margin-right: 8px;
+            font-size: 16px;
+            color: #555;
+        }
+
+        input[type="text"], input[type="password"] {
             width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        table, th, td {
-            border: 1px solid black;
-        }
-        th, td {
             padding: 10px;
-            text-align: left;
+            margin-right: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
         }
-        .highlight {
-            font-weight: bold;
+
+        button {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+            color: white;
+            background-color: #5cb85c;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
         }
-        .subCPMK {
-            border-top: 2px solid black;
+
+        button:hover {
+            background-color: #4cae4c;
+        }
+
+        .error {
+            color: red;
+            text-align: center;
         }
     </style>
 </head>
 <body>
-    <h1>Data Pengguna</h1>
-    <label for="userSelect">Pilih Pengguna:</label>
-    <select id="userSelect">
-        <option value="">--Pilih Pengguna--</option>
-        <!-- Opsi pengguna akan diisi oleh JavaScript -->
-    </select>
-    <table id="dataTable">
-        <thead>
-            <tr>
-                <th>Materi Pembelajaran</th>
-                <th>Sub CPMK</th>
-                <th>Knowledge Check</th>
-                <th>Boss Fight</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Data akan diisi oleh JavaScript -->
-        </tbody>
-    </table>
+    <div class="login-container">
+        <h1>Login</h1>
+        <div class="error" id="error-message"></div>
+        <label for="username">Username:</label>
+        <input type="text" id="username" placeholder="Username">
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" placeholder="Password">
+
+        <button id="login-btn">Login</button>
+    </div>
 
     <script>
-        // Ambil data pengguna untuk dropdown
-        fetch('/userstage/users')
-            .then(response => response.json())
-            .then(users => {
-                console.log('Users:', users); // Debugging untuk melihat data pengguna
-                const userSelect = document.getElementById('userSelect');
-                users.forEach(user => {
-                    const option = document.createElement('option');
-                    option.value = user.userId;
-                    option.textContent = user.nama;
-                    userSelect.appendChild(option);
-                });
+        document.getElementById('login-btn').addEventListener('click', function() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
             })
-            .catch(error => console.error('Error fetching users:', error));
-
-        // Update tabel berdasarkan pengguna yang dipilih
-        document.getElementById('userSelect').addEventListener('change', function() {
-            const userId = this.value;
-
-            if (userId) {
-                fetch(`/userstage/progress/${userId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Data:', data); // Debugging untuk melihat data tabel
-                        const tableBody = document.getElementById('dataTable').querySelector('tbody');
-                        tableBody.innerHTML = ''; // Clear existing rows
-
-                        if (data.length > 0) {
-                            let currentMateriPembelajaran = '';
-                            data.forEach(row => {
-                                const tr = document.createElement('tr');
-
-                                // Check if this row is a new section
-                                if (row.subCPMK) {
-                                    tr.classList.add('subCPMK');
-                                }
-
-                                // Cek jika materi pembelajaran berbeda dari baris sebelumnya
-                                const materiPembelajaranCell = row.materiPembelajaran !== currentMateriPembelajaran 
-                                    ? row.materiPembelajaran 
-                                    : '';
-                                currentMateriPembelajaran = row.materiPembelajaran;
-
-                                tr.innerHTML = `
-                                    <td>${materiPembelajaranCell}</td>
-                                    <td>${row.subCPMK || ''}</td>
-                                    <td>${row.tes !== undefined ? row.tes : ''}</td>
-                                    <td>${row.ujian !== undefined ? row.ujian : ''}</td>
-                                `;
-                                tableBody.appendChild(tr);
-                            });
-                        } else {
-                            const row = document.createElement('tr');
-                            row.innerHTML = `<td colspan="4">No data found</td>`;
-                            tableBody.appendChild(row);
-                        }
-                    })
-                    .catch(error => console.error('Error fetching progress data:', error));
-            } else {
-                const tableBody = document.getElementById('dataTable').querySelector('tbody');
-                tableBody.innerHTML = ''; // Clear table if no user is selected
-            }
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Redirect berdasarkan role
+                    window.location.href = data.redirectUrl;
+                } else {
+                    document.getElementById('error-message').textContent = data.message;
+                }
+            })
+            .catch(error => console.error('Error:', error));
         });
     </script>
 </body>

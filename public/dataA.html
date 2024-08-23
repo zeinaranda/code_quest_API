@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Pengguna</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+            position: relative; /* Add relative positioning for the button */
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        label, select, button {
+            display: block;
+            margin: 10px auto;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        label {
+            color: #555;
+        }
+
+        select, button {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            background-color: #fff;
+        }
+
+        button {
+            cursor: pointer;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #4cae4c;
+        }
+
+        .logout-btn {
+            background-color: #d9534f;
+            position: absolute; /* Position absolute for the button */
+            top: 20px; /* Distance from the top */
+            right: 20px; /* Distance from the right */
+            font-size: 14px; /* Adjust font size */
+            padding: 10px 20px; /* Adjust padding for better appearance */
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background-color: #c9302c;
+        }
+
+        .info-box {
+            background-color: #e7f1ff;
+            border: 1px solid #b6dff5;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-box p {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+            font-size: 16px;
+            color: #333;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Center only Materi Pembelajaran and Ujian columns */
+        td.materi-pembelajaran, td.ujian {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        /* Warna berbeda setiap 2 baris */
+        tr:nth-child(4n+1), tr:nth-child(4n+2) {
+            background-color: #e9f5ff; /* Warna latar belakang pertama */
+        }
+
+        tr:nth-child(4n+3), tr:nth-child(4n+4) {
+            background-color: #ffffff; /* Warna latar belakang kedua */
+        }
+
+        .highlight {
+            font-weight: bold;
+            color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <button class="logout-btn" id="logoutBtn">Logout</button>
+
+    <h1>Data Pengguna</h1>
+    <label for="userSelect">Pilih Pengguna:</label>
+    <select id="userSelect">
+        <option value="">--Pilih Pengguna--</option>
+        <!-- Opsi pengguna akan diisi oleh JavaScript -->
+    </select>
+
+    <button id="downloadBtn">Unduh Laporan Excel</button>
+
+    <div class="info-box">
+        <p><strong>Maximal Point Knowledge Check:</strong> 160</p>
+        <p><strong>Maximal Point Boss Fight:</strong> 2000</p>
+        <p><strong>Minimal Point Boss Fight:</strong> 1120</p>
+    </div>
+
+    <table id="dataTable">
+        <thead>
+            <tr>
+                <th>Materi Pembelajaran</th>
+                <th>Capaian Pembelajaran Mata Kuliah </th>
+                <th>Knowledge Check</th>
+                <th>Quiz</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data akan diisi oleh JavaScript -->
+        </tbody>
+    </table>
+
+    <script>
+        // Ambil data pengguna untuk dropdown
+        fetch('/userstage/users')
+            .then(response => response.json())
+            .then(users => {
+                const userSelect = document.getElementById('userSelect');
+                users.forEach(user => {
+                    const option = document.createElement('option');
+                    option.value = user.userId;
+                    option.textContent = user.nama;
+                    userSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error fetching users:', error));
+
+        // Update tabel berdasarkan pengguna yang dipilih
+        document.getElementById('userSelect').addEventListener('change', function() {
+            const userId = this.value;
+
+            if (userId) {
+                fetch(`/userstage/progress/${userId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const tableBody = document.getElementById('dataTable').querySelector('tbody');
+                        tableBody.innerHTML = ''; // Clear existing rows
+
+                        if (data.length > 0) {
+                            data.forEach((row, index) => {
+                                const tr = document.createElement('tr');
+
+                                // Buat cell dengan rowspan untuk menggabungkan setiap 2 baris pada "Materi Pembelajaran" dan "Ujian"
+                                if (index % 2 === 0) {
+                                    tr.innerHTML = `
+                                        <td class="materi-pembelajaran" rowspan="2">${row.materiPembelajaran}</td>
+                                        <td>${row.subCPMK || ''}</td>
+                                        <td>${row.tes !== undefined ? row.tes : ''}</td>
+                                        <td class="ujian" rowspan="2">${row.ujian !== undefined ? row.ujian : ''}</td>
+                                    `;
+                                } else {
+                                    tr.innerHTML = `
+                                        <td>${row.subCPMK || ''}</td>
+                                        <td>${row.tes !== undefined ? row.tes : ''}</td>
+                                    `;
+                                }
+
+                                tableBody.appendChild(tr);
+                            });
+                        } else {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `<td colspan="4">No data found</td>`;
+                            tableBody.appendChild(row);
+                        }
+                    })
+                    .catch(error => console.error('Error fetching progress data:', error));
+            } else {
+                const tableBody = document.getElementById('dataTable').querySelector('tbody');
+                tableBody.innerHTML = ''; // Clear table if no user is selected
+            }
+        });
+
+        // JavaScript untuk menangani klik tombol unduh
+        document.getElementById('downloadBtn').addEventListener('click', function() {
+            const userId = document.getElementById('userSelect').value;
+
+            if (userId) {
+                const url = `/userstage/export-progress/A`;
+                
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'progress_report.xlsx';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            } else {
+                alert('Pilih pengguna terlebih dahulu');
+            }
+        });
+
+        // JavaScript untuk logout
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            // Redirect to index.html
+            window.location.href = 'index.html'; // Adjust the path as needed
+        });
+    </script>
+</body>
+</html>

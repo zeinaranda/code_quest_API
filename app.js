@@ -18,6 +18,7 @@ const upload = multer({
 });
 
 var indexRouter = require('./routes/index');
+var adminRouter = require('./routes/admin');
 var usersRouter = require('./routes/users');
 var userRouter = require('./routes/user');
 var avatarRouter = require('./routes/avatar');
@@ -65,6 +66,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+app.use('/login', adminRouter);
 app.use('/users', usersRouter);
 app.use('/user', userRouter);
 app.use('/avatar', avatarRouter);

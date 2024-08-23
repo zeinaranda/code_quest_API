@@ -53,6 +53,22 @@ module.exports = {
       type: Sequelize.BOOLEAN,
       defaultValue: true,
     },
+    rank: { // Tambahkan kolom untuk menyimpan poin sebelumnya
+      type: Sequelize.INTEGER,
+      defaultValue: 0
+    },
+    previousRank: { // Track previous rank
+      type: Sequelize.INTEGER,
+      defaultValue: 0
+  },
+    rankArrow: { // Tambahkan kolom untuk status panah
+      type: Sequelize.STRING,
+      defaultValue: 'none'
+    },
+    rankChange: { // Menyimpan perubahan peringkat sebagai string seperti "+3" atau "-2"
+      type: Sequelize.STRING,
+      defaultValue: ''
+  }
     
     });
     

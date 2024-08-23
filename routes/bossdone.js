@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const { BossDone } = require('../models');
 const Validator = require('fastest-validator');
+const { Op } = require('sequelize');
+
 
 const v = new Validator();
 
@@ -67,5 +69,26 @@ router.get('/check/:userId', async (req, res) => {
     }
 });
 
+router.get('/user/:userId/stage/:bossId/completion', async (req, res) => {
+    try {
+        const { userId, bossId } = req.params;
+
+        // Cari entri di BossDone dengan skor >= 1120
+        const bossDone = await BossDone.findOne({
+            where: {
+                userId: userId,
+                bossId: bossId,
+                point: { [Op.gte]: 1120 }
+            }
+        });
+
+        const isStageCompleted = !!bossDone; // true jika BossDone ditemukan, false jika tidak
+
+        res.status(200).json({ stageCompleted: isStageCompleted });
+    } catch (error) {
+        console.error('Error checking stage completion:', error); // Log error to console for debugging
+        res.status(500).json({ error: 'Terjadi kesalahan saat memeriksa status penyelesaian tahap.' });
+    }
+});
 
 module.exports = router;
